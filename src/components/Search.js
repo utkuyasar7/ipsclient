@@ -1,43 +1,47 @@
-
 import React, { useState } from "react";
 
-function Search() {
-    const [responseText, setResponseText] = useState("");
+function Search({ onSearch }) {
+  const [domain, setDomain] = useState("");
 
-    const handleRequest = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (domain) {
       try {
-        const response = await fetch("https://ips-h373.vercel.app/domain/resolve", {
+        const response = await fetch("https://ips-mt5d.vercel.app/domain/resolve", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "*"
           },
-          body: JSON.stringify({
-            "domain": "google.com"
-          })
+          body: JSON.stringify({ domain }),
         });
-  
+
         const data = await response.json();
-        setResponseText(JSON.stringify(data, null, 2));
+        
+        onSearch(data);
       } catch (error) {
-        console.error('API isteği başarısız:', error);
-        setResponseText("API isteği başarısız");
+        console.error("API isteği başarısız:", error);
       }
-    };
-  
-    return (
-      <div className="bg-gray-200 p-4 rounded shadow">
-        <h2 className="text-xl font-semibold mb-2">API İstek</h2>
-        <button onClick={handleRequest} className="bg-blue-500 text-white px-4 py-1 rounded">
-          İstek Gönder
+    }
+  };
+
+  return (
+    <div className="bg-gray-200 p-4 rounded shadow w-80 md:w-full">
+      <h2 className="text-xl font-semibold mb-2">IP Arama</h2>
+      <form onSubmit={handleSubmit} className="flex">
+        <input
+          type="text"
+          value={domain}
+          onChange={(e) => setDomain(e.target.value)}
+          placeholder="Domain girin..."
+          className="mr-2 px-2 py-1 border rounded"
+        />
+        <button type="submit" className="bg-blue-500 text-white px-4 py-1 rounded">
+          Ara
         </button>
-        <pre className="mt-4 p-2 border rounded bg-white">
-          {responseText}
-        </pre>
-      </div>
-    );
-  }
-  
+      </form>
+    </div>
+  );
+}
 
 export default Search;

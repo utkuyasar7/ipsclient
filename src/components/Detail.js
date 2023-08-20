@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
-import{getIPDetail} from "../api/apiHelper"
+import { getIPDetail } from "../api/apiHelper";
 
-function Detail() {
-  const [IPDetail, setIPDetail] = useState(null); // Başlangıçta null olarak ayarlayın
+function Detail({ searchingIPDetail }) {
+  const [IPDetail, setIPDetail] = useState(null);
 
   useEffect(() => {
-    getIPDetail(setIPDetail)
-  }, []);
+    if (searchingIPDetail) {
+      setIPDetail(searchingIPDetail);
+    } else {
+      getIPDetail(setIPDetail);
+    }
+  }, [searchingIPDetail]);
 
   return (
-    <div className="bg-gray-200 p-4 rounded shadow">
+    <div className="bg-gray-200 p-4 rounded shadow w-80 md:w-full">
       <h2 className="text-xl font-semibold mb-2">IP Detayları</h2>
       {IPDetail ? (
         <div>
